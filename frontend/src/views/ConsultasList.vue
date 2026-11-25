@@ -52,8 +52,12 @@ export default {
     try {
       const res = await consultasApi.getAll()
       this.consultas = res.data
-    } catch {
-      alert('Error al procesar la solicitud')
+    } catch (error){
+      if (error.response && error.response.data) {
+        alert(error.response.data.mensaje)
+      }else{
+        alert('Error al Obtener las Consultas')
+      }
     }
   },
   methods: {

@@ -27,7 +27,7 @@ public class AfiliadosController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         var afiliado = await _context.Afiliados.FindAsync(id);
-        if (afiliado == null) return NotFound();
+        if (afiliado == null) return NotFound(new { mensaje = "Afiliado no encontrado." });
         return Ok(afiliado);
     }
 
@@ -45,7 +45,7 @@ public class AfiliadosController : ControllerBase
     public async Task<IActionResult> Update(int id, [FromBody] Afiliado afiliado)
     {
         var afiliadoExistente = await _context.Afiliados.FindAsync(id);
-        if (afiliadoExistente == null) return NotFound();
+        if (afiliadoExistente == null) return NotFound(new { mensaje = "Afiliado no encontrado." });
 
         afiliadoExistente.NombreCompleto = afiliado.NombreCompleto;
         afiliadoExistente.DNI = afiliado.DNI;
@@ -60,7 +60,7 @@ public class AfiliadosController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         var afiliado = await _context.Afiliados.FindAsync(id);
-        if (afiliado == null) return NotFound();
+        if (afiliado == null) return NotFound(new { mensaje = "Afiliado no encontrado." });
 
         _context.Afiliados.Remove(afiliado);
         await _context.SaveChangesAsync();

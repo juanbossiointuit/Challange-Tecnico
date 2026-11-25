@@ -49,9 +49,13 @@ export default {
       const res = await consultasApi.getById(this.$route.params.id)
       this.consulta = res.data
       this.nuevoEstado = this.consulta.estado
-    } catch {
-      alert('Error al procesar la solicitud')
-    }
+    } catch (error){
+          if (error.response && error.response.data) {
+            alert(error.response.data.mensaje)
+          }else{
+            alert('Error al Obtener Detalle de la Consulta')
+          }
+        }
   },
   methods: {
     formatFecha(fecha) {
@@ -61,24 +65,48 @@ export default {
       try {
         const res = await consultasApi.actualizarEstado(this.consulta.id, { estado: this.nuevoEstado })
         this.consulta = res.data
-      } catch {
-        alert('Error al procesar la solicitud')
-      }
+      } catch (error){
+          if (error.response && error.response.data) {
+            alert(error.response.data.mensaje)
+          }else{
+            alert('Error al Cambiar el Estado de la Consulta')
+          }
+        }
     },
     async registrarAtencion() {
       try {
         const res = await consultasApi.registrarAtencion(this.consulta.id)
         this.consulta = res.data
         this.nuevoEstado = this.consulta.estado
-      } catch {
-        alert('Error al procesar la solicitud')
-      }
+      } catch (error){
+          if (error.response && error.response.data) {
+            alert(error.response.data.mensaje)
+          }else{
+            alert('Error al Registrar la Consulta')
+          }
+        }
     },
     async cancelar() {
-      await consultasApi.cancelar(this.consulta.id)
+      try {
+        await consultasApi.cancelar(this.consulta.id)
+      } catch (error){
+          if (error.response && error.response.data) {
+            alert(error.response.data.mensaje)
+          }else{
+            alert('Error al Cancelar la Consulta')
+          }
+        }
     },
     async marcarInasistencia() {
-      await consultasApi.marcarInasistencia(this.consulta.id)
+      try {
+        await consultasApi.marcarInasistencia(this.consulta.id)
+      }catch (error){
+          if (error.response && error.response.data) {
+            alert(error.response.data.mensaje)
+          }else{
+            alert('Error al Marcar Inasistencia a la Consulta')
+          }
+        }
     }
   }
 }

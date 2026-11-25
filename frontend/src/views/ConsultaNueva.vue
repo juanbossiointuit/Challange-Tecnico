@@ -63,24 +63,47 @@ export default {
       const [aRes, pRes] = await Promise.all([afiliadosApi.getAll(), profesionalesApi.getAll()])
       this.afiliados = aRes.data
       this.profesionales = pRes.data
-    } catch {
-      alert('Error al procesar la solicitud')
+    } catch (error){
+      if (error.response && error.response.data) {
+        alert(error.response.data.mensaje)
+      }else{
+        alert('Error al procesar la solicitud')
+      }
     }
   },
   methods: {
     async guardar() {
-      try {
-        await consultasApi.create({
-          afiliadoId: Number(this.form.afiliadoId),
-          profesionalId: Number(this.form.profesionalId),
-          modalidad: this.form.modalidad,
-          fechaHora: this.form.fechaHora,
-          motivo: this.form.motivo
-        })
-        this.$router.push('/consultas')
-      } catch {
-        alert('Error al procesar la solicitud')
+      if(this.formularioValido){
+        try {
+          await consultasApi.create({
+            afiliadoId: Number(this.form.afiliadoId),
+            profesionalId: Number(this.form.profesionalId),
+            modalidad: this.form.modalidad,
+            fechaHora: this.form.fechaHora,
+            motivo: this.form.motivo
+          })
+          this.$router.push('/consultas')
+        } catch (error){
+          if (error.response && error.response.data) {
+            alert(error.response.data.mensaje)
+          }else{
+            alert('Error al Guardar la Consulta')
+          }
+        }
+      }else{
+          alert('Debe completar todos los campos')
       }
+    }
+  },
+   computed: {
+    formularioValido() {
+      return (
+        this.form.afiliadoId !== '' ||
+        this.form.profesionalId !== '' ||
+        (this.form.modalidad !== 'Presencial' && this.form.modalidad !== 'Virtual') ||
+        this.form.fechaHora !== '' ||
+        this.form.motivo.trim() !== ''
+      );
     }
   }
 }

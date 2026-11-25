@@ -53,7 +53,7 @@ export default {
       const res = await afiliadosApi.getAll()
       this.afiliados = res.data
     } catch {
-      alert('Error al procesar la solicitud')
+      alert('Error al Obtener Afiliados')
     }
   },
   methods: {
@@ -61,9 +61,13 @@ export default {
       try {
         await afiliadosApi.delete(id)
         this.afiliados = this.afiliados.filter(a => a.id !== id)
-      } catch {
-        alert('Error al procesar la solicitud')
-      }
+      }  catch (error){
+          if (error.response && error.response.data) {
+            alert(error.response.data.mensaje)
+          }else{
+            alert('Error al Eliminar el Afiliado')
+          }
+        }
     }
   }
 }

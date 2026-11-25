@@ -34,7 +34,7 @@ public class ConsultasController : ControllerBase
             .Include(c => c.Afiliado)
             .Include(c => c.Profesional)
             .FirstOrDefaultAsync(c => c.Id == id);
-        if (consulta == null) return NotFound();
+        if (consulta == null) return NotFound(new { mensaje = "Consulta no encontrada." });
         return Ok(consulta);
     }
 
@@ -70,7 +70,7 @@ public class ConsultasController : ControllerBase
     public async Task<IActionResult> CancelarConsulta(int id)
     {
         var consulta = await _context.Consultas.FindAsync(id);
-        if (consulta == null) return NotFound();
+        if (consulta == null) return NotFound(new { mensaje = "Consulta no encontrada." });
 
         if (consulta.FechaHora - DateTime.Now < TimeSpan.FromHours(23))
             return BadRequest(new { mensaje = "No se puede cancelar con menos de 24 horas de anticipación." });
@@ -84,7 +84,7 @@ public class ConsultasController : ControllerBase
     public async Task<IActionResult> MarcarInasistencia(int id)
     {
         var consulta = await _context.Consultas.FindAsync(id);
-        if (consulta == null) return NotFound();
+        if (consulta == null) return NotFound(new { mensaje = "Consulta no encontrada." });
 
         if (consulta.FechaHora > DateTime.Now)
             return BadRequest(new { mensaje = "No se puede registrar una inasistencia sobre una consulta futura." });
@@ -98,7 +98,7 @@ public class ConsultasController : ControllerBase
     public async Task<IActionResult> RegistrarAtencion(int id)
     {
         var consulta = await _context.Consultas.FindAsync(id);
-        if (consulta == null) return NotFound();
+        if (consulta == null) return NotFound(new { mensaje = "Consulta no encontrada." });
 
         if (!DateTimeExtensions.IsInCurrentYear(consulta.FechaHora))
             return BadRequest(new { mensaje = "Solo se pueden registrar atenciones de consultas del año en curso." });
@@ -112,7 +112,7 @@ public class ConsultasController : ControllerBase
     public async Task<IActionResult> ActualizarEstado(int id, [FromBody] ActualizarEstadoRequest request)
     {
         var consulta = await _context.Consultas.FindAsync(id);
-        if (consulta == null) return NotFound();
+        if (consulta == null) NotFound(new { mensaje = "Consulta no encontrada." });
 
         consulta.Estado = request.Estado;
         await _context.SaveChangesAsync();
