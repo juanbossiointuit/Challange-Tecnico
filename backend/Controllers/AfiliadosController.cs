@@ -44,16 +44,16 @@ public class AfiliadosController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] Afiliado afiliado)
     {
-        var existing = await _context.Afiliados.FindAsync(id);
-        if (existing == null) return NotFound();
+        var afiliadoExistente = await _context.Afiliados.FindAsync(id);
+        if (afiliadoExistente == null) return NotFound();
 
-        existing.NombreCompleto = afiliado.Nombre;
-        existing.DNI = afiliado.DNI;
-        existing.Email = afiliado.Email;
-        existing.Telefono = afiliado.Telefono;
+        afiliadoExistente.NombreCompleto = afiliado.NombreCompleto;
+        afiliadoExistente.DNI = afiliado.DNI;
+        afiliadoExistente.Email = afiliado.Email;
+        afiliadoExistente.Telefono = afiliado.Telefono;
 
         await _context.SaveChangesAsync();
-        return Ok(existing);
+        return Ok(afiliadoExistente);
     }
 
     [HttpDelete("{id}")]

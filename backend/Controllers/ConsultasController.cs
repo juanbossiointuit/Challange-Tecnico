@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ConsultasPlan.Data;
 using ConsultasPlan.Models;
+using ConsultasPlan.Helpers;
 
 namespace ConsultasPlan.Controllers;
 
@@ -65,7 +66,7 @@ public class ConsultasController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = consulta.Id }, consulta);
     }
 
-    [HttpGet("cancelar/{id}")]
+    [HttpPost("cancelar/{id}")]
     public async Task<IActionResult> CancelarConsulta(int id)
     {
         var consulta = await _context.Consultas.FindAsync(id);
@@ -79,7 +80,7 @@ public class ConsultasController : ControllerBase
         return Ok(consulta);
     }
 
-    [HttpPost("{id}/inasistencia")]
+    [HttpPost("inasistencia/{id}")]
     public async Task<IActionResult> MarcarInasistencia(int id)
     {
         var consulta = await _context.Consultas.FindAsync(id);
@@ -93,13 +94,13 @@ public class ConsultasController : ControllerBase
         return Ok(consulta);
     }
 
-    [HttpPost("{id}/atencion")]
+    [HttpPost("atencion/{id}")]
     public async Task<IActionResult> RegistrarAtencion(int id)
     {
         var consulta = await _context.Consultas.FindAsync(id);
         if (consulta == null) return NotFound();
 
-        if (!consulta.FechaHora.IsInCurrentYear())
+        if (!DateTimeExtensions.IsInCurrentYear(consulta.FechaHora))
             return BadRequest(new { mensaje = "Solo se pueden registrar atenciones de consultas del año en curso." });
 
         consulta.Estado = EstadoConsulta.Atendido;
@@ -107,7 +108,7 @@ public class ConsultasController : ControllerBase
         return Ok(consulta);
     }
 
-    [HttpPut("{id}/estado")]
+    [HttpPut("estado/{id}")]
     public async Task<IActionResult> ActualizarEstado(int id, [FromBody] ActualizarEstadoRequest request)
     {
         var consulta = await _context.Consultas.FindAsync(id);
@@ -117,9 +118,4 @@ public class ConsultasController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok(consulta);
     }
-}
-
-public class ActualizarEstadoRequest
-{
-    public EstadoConsulta Estado { get; set; }
 }
