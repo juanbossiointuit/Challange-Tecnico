@@ -59,8 +59,10 @@ export default {
   methods: {
     async eliminar(id) {
       try {
-        await afiliadosApi.delete(id)
-        this.afiliados = this.afiliados.filter(a => a.id !== id)
+        if (confirm(`Confirma para Eliminar el Afiliado N°${id}`)){
+          await afiliadosApi.delete(id)
+          this.afiliados = this.afiliados.filter(a => a.id !== id)
+        }
       }  catch (error){
           if (error.response && error.response.data) {
             alert(error.response.data.mensaje)

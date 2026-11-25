@@ -88,7 +88,7 @@ export default {
     },
     async cancelar() {
       try {
-        await consultasApi.cancelar(this.consulta.id)
+        if (confirm(`Confirma para cancelar el Turno N°${this.consulta.id}`)) await consultasApi.cancelar(this.consulta.id)
       } catch (error){
           if (error.response && error.response.data) {
             alert(error.response.data.mensaje)
