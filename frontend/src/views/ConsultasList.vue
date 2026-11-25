@@ -28,7 +28,7 @@
           </td>
           <td>{{ consulta.motivo }}</td>
           <td>
-            <router-link :to="`/consultas/${consulta.id}`">Ver</router-link>
+            <button class="btn" style="margin-left: 8px" @click="verConsulta(consulta.id)">Ver</button>
             <button class="btn-danger" style="margin-left: 8px" @click="cancelar(consulta.id)">Cancelar</button>
           </td>
         </tr>
@@ -61,7 +61,10 @@ export default {
       return new Date(fecha).toLocaleString('es-AR')
     },
     async cancelar(id) {
-      await consultasApi.cancelar(id)
+      if (confirm(`Confirma para cancelar el Turno N°${id}`)) await consultasApi.cancelar(id)
+    },
+    async verConsulta(id) {
+      this.$router.push(`/consultas/${id}`);
     }
   }
 }

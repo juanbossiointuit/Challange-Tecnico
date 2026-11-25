@@ -6,10 +6,10 @@ export const consultasApi = {
   getAll:             ()          => axios.get(`${BASE_URL}/consultas`),
   getById:            (id)        => axios.get(`${BASE_URL}/consultas/${id}`),
   create:             (data)      => axios.post(`${BASE_URL}/consultas`, data),
-  cancelar:           (id)        => axios.get(`${BASE_URL}/consultas/cancelar/${id}`),
-  marcarInasistencia: (id)        => axios.post(`${BASE_URL}/consultas/${id}/inasistencia`),
-  registrarAtencion:  (id)        => axios.post(`${BASE_URL}/consultas/${id}/atencion`),
-  actualizarEstado:   (id, data)  => axios.put(`${BASE_URL}/consultas/${id}/estado`, data)
+  cancelar:           (id)        => axios.post(`${BASE_URL}/consultas/cancelar/${id}`),
+  marcarInasistencia: (id)        => axios.post(`${BASE_URL}/consultas/inasistencia/${id}`),
+  registrarAtencion:  (id)        => axios.post(`${BASE_URL}/consultas/atencion/${id}`),
+  actualizarEstado:   (id, data)  => axios.put(`${BASE_URL}/consultas/estado/${id}`, data)
 }
 
 export const afiliadosApi = {
