@@ -13,13 +13,17 @@ namespace ConsultasPlan.Services
         }
         public async Task<List<Afiliado>> GetAfiliados()
         {
-            var afiliados = await _context.Afiliados.ToListAsync();
+            var afiliados = await _context.Afiliados.Where(afiliado => afiliado.isActive).ToListAsync();
             return afiliados;
         }
-        public async Task<Afiliado?> GetAfiliadoById(int id)
+        public async Task<Afiliado?> GetAfiliadoById(int? id)
         {
             var afiliado = await _context.Afiliados.FindAsync(id);
-            return afiliado;
+            if (afiliado!= null && afiliado.isActive)
+            {
+                return afiliado;
+            }
+            return null;
         }
         public async Task<Afiliado> CreateAfiliado(Afiliado afiliado)
         {
@@ -31,7 +35,7 @@ namespace ConsultasPlan.Services
         }
         public async Task<Afiliado?> UpdateAfiliado(int id, Afiliado afiliado)
         {
-            var afiliadoExistente = await _context.Afiliados.FindAsync(id);
+            var afiliadoExistente = await GetAfiliadoById(id);
             if (afiliadoExistente == null) return null;
 
             afiliadoExistente.NombreCompleto = afiliado.NombreCompleto;
@@ -43,10 +47,10 @@ namespace ConsultasPlan.Services
         }
         public async Task<bool> DeleteAfiliado(int id)
         {
-            var afiliado = await _context.Afiliados.FindAsync(id);
+            var afiliado = await GetAfiliadoById(id);
             if (afiliado == null) return false;
 
-            _context.Afiliados.Remove(afiliado);
+            afiliado.isActive = false;
             await _context.SaveChangesAsync();
             return true;
         }

@@ -7,9 +7,12 @@ namespace ConsultasPlan.Services
     public class ConsultasService
     {
         private readonly AppDbContext _context;
-        public ConsultasService(AppDbContext context)
+        private readonly AfiliadosService _afiliadosService;
+        
+        public ConsultasService(AppDbContext context, AfiliadosService afiliadosService)
         {
             _context = context;
+            _afiliadosService = afiliadosService;
         }
         public async Task<List<Consulta>> GetConsultas()
         {
@@ -23,7 +26,7 @@ namespace ConsultasPlan.Services
         }
         public async Task<ConsultaDTO> CrearConsulta(Consulta consulta)
         {
-            var afiliado = await _context.Afiliados.FindAsync(consulta.AfiliadoId);
+            var afiliado = await _afiliadosService.GetAfiliadoById(consulta.AfiliadoId);
             if (afiliado == null)
                 return new ConsultaDTO(null,  "Afiliado no encontrado.", false);
 
@@ -51,7 +54,7 @@ namespace ConsultasPlan.Services
             var consulta = await GetById(id);
             if (consulta == null) return new ConsultaDTO(null, "Consulta no encontrada.", false);
 
-            if (consulta.FechaHora - DateTime.Now < TimeSpan.FromHours(23))
+            if (consulta.FechaHora - DateTime.Now < TimeSpan.FromHours(24))
                 return new ConsultaDTO(null, "No se puede cancelar con menos de 24 horas de anticipación.", true);
 
             consulta.Estado = EstadoConsulta.Cancelado;
