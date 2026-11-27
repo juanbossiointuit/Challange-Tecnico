@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ConsultasPlan.Data;
+using ConsultasPlan.Services;
 
 namespace ConsultasPlan.Controllers;
 
@@ -8,17 +9,17 @@ namespace ConsultasPlan.Controllers;
 [Route("[controller]")]
 public class SedesController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly SedesService _service;
 
-    public SedesController(AppDbContext context)
+    public SedesController(SedesService service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var sedes = await _context.Sedes.ToListAsync();
+        var sedes = await _service.GetSedes();
         return Ok(sedes);
     }
 }
